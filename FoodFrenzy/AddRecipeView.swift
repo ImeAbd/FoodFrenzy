@@ -31,6 +31,7 @@ struct AddRecipeView: View {
                         .keyboardType(.numberPad)
                         .onTapGesture {
                             UIApplication.shared.sendAction(#selector(UIResponder.becomeFirstResponder), to: nil, from: nil, for: nil)
+                       
                         }
                 }
                 Section(header: Text("Category")) {
