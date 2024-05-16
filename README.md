@@ -1,5 +1,7 @@
 # FoodFrenzy
 
+ITHS-AU22-FinalProject
+
 A recipe sharing app.
 
 You are able to:
