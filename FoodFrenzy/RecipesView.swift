@@ -75,6 +75,8 @@ struct RecipesView: View {
 struct RecipeDetailView: View {
     let recipe: Recipe
     
+    @State private var showAllIngredients = false
+    
     var body: some View {
         VStack {
             Text(recipe.name)
@@ -84,9 +86,21 @@ struct RecipeDetailView: View {
                 .foregroundColor(.secondary)
             Divider()
             Section(header: Text("Ingredients")) {
-                ForEach(recipe.ingredients, id: \.self) { ingredient in
-                    Text(ingredient)
+                if showAllIngredients {
+                    ForEach(recipe.ingredients, id: \.self) { ingredient in
+                        Text("• \(ingredient)")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                } else {
+                    ForEach(recipe.ingredients.prefix(3), id: \.self) { ingredient in
+                        Text("• \(ingredient)")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
+                Button(showAllIngredients ? "Show less" : "Show all") {
+                    showAllIngredients.toggle()
+                }
+                .padding(.vertical)
             }
             Divider()
             Section(header: Text("Instructions")) {
@@ -102,6 +116,7 @@ struct RecipeDetailView: View {
 
     }
 }
+
 
 /*struct RecipesView_Previews: PreviewProvider {
     static var previews: some View {

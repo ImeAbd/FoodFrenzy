@@ -14,14 +14,22 @@ struct ContentView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var userIsLoggedIn = false
+    @State private var showAlert = false
+    @State private var alertTitle: String = ""
+    @State private var alertMessage: String = ""
+
     
     var body: some View {
         if userIsLoggedIn {
            HomePageView()
         } else {
-            content
+            content.alert(isPresented: $showAlert) {
+                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            }
         }
     }
+
+           
     //
     var content: some View {
         ZStack {
@@ -117,23 +125,34 @@ struct ContentView: View {
     }
     
     func login() {
-        Auth.auth().signIn(withEmail: email, password: password) { result, error in
-            if error != nil {
-            print(error!.localizedDescription)
-        } else {
+            Auth.auth().signIn(withEmail: email, password: password) { result, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    alertTitle = "Log In Unsuccessful"
+                    alertMessage = error.localizedDescription
+                } else {
                     userIsLoggedIn = true
+                    alertTitle = "Log In Successful"
+                    alertMessage = "Log In Successful."
+                }
+                showAlert = true
+            }
+        }
+        
+        func register () {
+            Auth.auth().createUser(withEmail: email, password: password) { result, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    alertTitle = "Registration Unsuccessful"
+                    alertMessage = error.localizedDescription
+                } else {
+                    alertTitle = "Registered Successfully"
+                    alertMessage = "Welcome to FoodFrenzy."
+                }
+                showAlert = true
             }
         }
     }
-    
-    func register () {
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
-            if error != nil {
-                print(error!.localizedDescription)
-            }
-        }
-    }
-}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
